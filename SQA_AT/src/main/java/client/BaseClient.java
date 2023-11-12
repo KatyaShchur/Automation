@@ -8,20 +8,20 @@ import io.restassured.specification.RequestSpecification;
 
 public class BaseClient {
 
-    private final String baseUrl = "https://petstore.swagger.io/v2";
+    private static final String BASE_URL = "https://petstore.swagger.io/v2";
 
-    protected RequestSpecification baseRequestSpecification(ContentType contentType) {
+    protected RequestSpecification getBaseRequestSpecification(ContentType contentType) {
         RequestSpecBuilder builder = new RequestSpecBuilder()
                 .setConfig(RestAssuredConfig.config().logConfig(LogConfig.logConfig().enableLoggingOfRequestAndResponseIfValidationFails()))
                 .setConfig(RestAssuredConfig.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(true)))
-                .setBaseUri(baseUrl)
+                .setBaseUri(BASE_URL)
                 .setAccept(contentType)
                 .setContentType(contentType);
 
         return builder.build();
     }
 
-    protected final RequestSpecification baseRequestSpecification() {
-        return baseRequestSpecification(ContentType.JSON);
+    protected RequestSpecification getBaseRequestSpecification() {
+        return getBaseRequestSpecification(ContentType.JSON);
     }
 }

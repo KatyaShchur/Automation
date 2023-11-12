@@ -2,17 +2,18 @@ package com.epam.pageobject;
 
 import general.BaseGeneralPage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class EpamHomePage extends BaseGeneralPage {
+
+    private static final String CLASS_ATTR = "class";
+    private static final String DARK_MODE_ATTR = "dark-mode";
+    private static final String DATA_COUNTRY_ATTR = "data-country";
 
     @FindBy(css = ".header__content > .theme-switcher-ui .switch")
     private WebElement themeSwitcher;
@@ -56,20 +57,18 @@ public class EpamHomePage extends BaseGeneralPage {
     }
 
     public boolean isDarkThemeMode() {
-        return modeType.getAttribute("class").contains("dark-mode");
+        return modeType.getAttribute(CLASS_ATTR).contains(DARK_MODE_ATTR);
     }
 
     public void selectLanguage(String language, String redirectUrl) {
         languageButton.click();
-        new WebDriverWait(driver, Duration.ofSeconds(2)).until(
-                ExpectedConditions.visibilityOfElementLocated(new By.ByCssSelector("[class=location-selector__link][lang=" + language + "]")));
-        driver.findElement(new By.ByCssSelector("[class=location-selector__link][lang=" + language + "]")).click();
-        new WebDriverWait(driver, Duration.ofSeconds(2)).until(
-                ExpectedConditions.urlToBe(redirectUrl));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(languageLocator(language)));
+        driver.findElement(languageLocator(language)).click();
+        wait.until(ExpectedConditions.urlToBe(redirectUrl));
     }
 
     public List<String> getPoliciesList() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", policiesList.get(0));
+        scrollIntoView(policiesList.get(0));
 
         return policiesList.stream()
                 .map(WebElement::getText)
@@ -77,7 +76,7 @@ public class EpamHomePage extends BaseGeneralPage {
     }
 
     public List<String> getLocationList() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", locationList.get(0));
+        scrollIntoView(locationList.get(0));
 
         return locationList.stream()
                 .map(WebElement::getText)
@@ -85,29 +84,31 @@ public class EpamHomePage extends BaseGeneralPage {
     }
 
     public void clickLocation(String locationName) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();",
-                driver.findElement(new By.ByXPath(".//*[contains(text(), '" + locationName + "')]")));
+        clickJS(driver.findElement(getByText(locationName)));
     }
 
     public List<String> getCountryList() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", countryList.get(0));
+        scrollIntoView(countryList.get(0));
         return countryList.stream()
-                .map(t -> t.getAttribute("data-country"))
+                .map(t -> t.getAttribute(DATA_COUNTRY_ATTR))
                 .collect(Collectors.toList());
     }
 
     public String searchByText(String text) {
         searchButton.click();
-        new WebDriverWait(driver, Duration.ofSeconds(2)).until(ExpectedConditions.visibilityOf(searchInput));
+        wait.until(ExpectedConditions.visibilityOf(searchInput));
         searchInput.sendKeys(text);
         findSearchButton.click();
-        new WebDriverWait(driver, Duration.ofSeconds(2)).until(ExpectedConditions.visibilityOf(searchResultsCounter));
+        wait.until(ExpectedConditions.visibilityOf(searchResultsCounter));
         return searchResultsCounter.getText();
     }
 
     public void checkLogoRedirection(String redirectUrl) {
         logo.click();
-        new WebDriverWait(driver, Duration.ofSeconds(2)).until(
-                ExpectedConditions.urlToBe(redirectUrl));
+        wait.until(ExpectedConditions.urlToBe(redirectUrl));
+    }
+
+    private By.ByCssSelector languageLocator(String language) {
+        return new By.ByCssSelector("[class=location-selector__link][lang=" + language + "]");
     }
 }

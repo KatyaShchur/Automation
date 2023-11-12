@@ -7,31 +7,31 @@ import model.Order;
 import static io.restassured.RestAssured.given;
 
 public class StoreClient extends BaseClient{
-    private final String storeInventoryUrl = "/store/inventory";
-    private final String storeOrderUrl = "/store/order";
-    private final String storeOrderIdUrl = storeOrderUrl + "/{orderId}";
+    private static final String STORE_INVENTORY_URL = "/store/inventory";
+    private static final String STORE_ORDER_URL = "/store/order";
+    private static final String STORE_ORDER_ID_URL = STORE_ORDER_URL + "/{orderId}";
 
     public Response getStoreInventory() {
-        return given(baseRequestSpecification(ContentType.JSON))
-                .get(storeInventoryUrl);
+        return given(getBaseRequestSpecification(ContentType.JSON))
+                .get(STORE_INVENTORY_URL);
     }
 
     public Response createStoreOrder(Order order) {
-        return given(baseRequestSpecification())
+        return given(getBaseRequestSpecification())
                 .body(order)
-                .post(storeOrderUrl);
+                .post(STORE_ORDER_URL);
     }
 
     public Response deleteStoreOrder(Long id) {
-        return  given(baseRequestSpecification())
+        return  given(getBaseRequestSpecification())
                 .pathParam("orderId", id)
-                .delete(storeOrderIdUrl);
+                .delete(STORE_ORDER_ID_URL);
     }
 
     public Response getStoreOrderById(Long id) {
-        return given(baseRequestSpecification())
+        return given(getBaseRequestSpecification())
                 .pathParam("orderId", id)
-                .get(storeOrderIdUrl);
+                .get(STORE_ORDER_ID_URL);
     }
 
 }

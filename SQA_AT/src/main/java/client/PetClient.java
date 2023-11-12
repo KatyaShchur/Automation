@@ -9,44 +9,44 @@ import java.io.File;
 import static io.restassured.RestAssured.given;
 
 public class PetClient extends BaseClient {
-    private final String petClientUrl = "/pet";
-    private final String petIdUrl = petClientUrl + "/{petId}";
-    private final String petImageUrl = petIdUrl + "/uploadImage";
+    private static final String PET_CLIENT_URL = "/pet";
+    private static final String PET_ID_URL = PET_CLIENT_URL + "/{petId}";
+    private static final String PET_IMAGE_URL = PET_ID_URL + "/uploadImage";
 
     public Response getPetById(Integer id) {
-        return given(baseRequestSpecification(ContentType.JSON))
+        return given(getBaseRequestSpecification(ContentType.JSON))
                 .pathParam("petId", id)
-                .get(petIdUrl);
+                .get(PET_ID_URL);
     }
 
     public Response deletePetById(Integer id) {
-        return given(baseRequestSpecification(ContentType.JSON))
+        return given(getBaseRequestSpecification(ContentType.JSON))
                 .pathParam("petId", id)
-                .delete(petIdUrl);
+                .delete(PET_ID_URL);
     }
 
     public Response createPet(Pet pets) {
-        return given(baseRequestSpecification(ContentType.JSON))
+        return given(getBaseRequestSpecification(ContentType.JSON))
                 .body(pets)
-                .post(petClientUrl);
+                .post(PET_CLIENT_URL);
     }
 
     public Response updatePet(Integer id, String name, String status) {
-        return given(baseRequestSpecification(ContentType.URLENC))
+        return given(getBaseRequestSpecification(ContentType.URLENC))
                 .accept(ContentType.JSON)
                 .pathParam("petId", id)
                 .formParam("name", name)
                 .formParam("status", status)
-                .post(petIdUrl);
+                .post(PET_ID_URL);
 
     }
 
     public Response updatePetImage(Integer id) {
         String pathToFile = getClass().getResource("/cat.jpg").getPath();
-        return given(baseRequestSpecification(ContentType.MULTIPART))
+        return given(getBaseRequestSpecification(ContentType.MULTIPART))
                 .accept(ContentType.JSON)
                 .multiPart("file", new File(pathToFile))
                 .pathParam("petId", id)
-                .post(petImageUrl);
+                .post(PET_IMAGE_URL);
     }
 }

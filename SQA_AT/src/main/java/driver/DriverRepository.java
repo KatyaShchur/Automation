@@ -23,7 +23,7 @@ public class DriverRepository {
     }
 
     public void downloadWebDriver() {
-        final String browserType = getBrowserType();
+        String browserType = getBrowserType();
         switch (browserType) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
@@ -34,7 +34,7 @@ public class DriverRepository {
     }
 
     public void instantiateBrowser() {
-        final String browserType = getBrowserType();
+        String browserType = getBrowserType();
         RemoteWebDriver driver;
         switch (browserType) {
             case "chrome":

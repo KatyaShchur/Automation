@@ -15,25 +15,25 @@ public class UserClient extends BaseClient {
     private static final String LOGOUT_URL = USER_URL + "/logout";
 
     public Response create(User user) {
-        return given(baseRequestSpecification())
+        return given(getBaseRequestSpecification())
                 .body(user)
                 .post(USER_URL);
     }
 
-    public Response createWithList(final List<User> users) {
-        return given(baseRequestSpecification())
+    public Response createUsersByProvidedUsersList(List<User> users) {
+        return given(getBaseRequestSpecification())
                 .body(users)
                 .post(CREATE_WITH_USER_LIST_URL);
     }
 
     public Response login(String name, String password) {
-        return given(baseRequestSpecification())
+        return given(getBaseRequestSpecification())
                 .queryParam("name", name, "password", password)
                 .get(LOGIN_URL);
     }
 
     public Response logout() {
-        return given(baseRequestSpecification())
+        return given(getBaseRequestSpecification())
                 .get(LOGOUT_URL);
     }
 }

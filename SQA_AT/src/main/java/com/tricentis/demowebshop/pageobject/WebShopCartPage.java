@@ -4,7 +4,6 @@ import general.BaseGeneralPage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
@@ -42,10 +41,9 @@ public class WebShopCartPage extends BaseGeneralPage {
         updateCartButton.click();
     }
 
-    public void checkCheckoutItem() {
+    public void checkCheckoutItem(String url) {
         termsOfServiceCheckbox.click();
         checkoutButton.click();
-        new WebDriverWait(driver, Duration.ofSeconds(2)).until(
-                ExpectedConditions.urlToBe("https://demowebshop.tricentis.com/onepagecheckout"));
+        wait.until(ExpectedConditions.urlToBe(url));
     }
 }

@@ -1,7 +1,6 @@
 package com.epam.pageobject;
 
 import general.BaseGeneralPage;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -26,8 +25,8 @@ public class EpamAboutPage extends BaseGeneralPage {
     private WebElement userPhone;
 
     public void clickDownloadButton() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", downloadButton);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", downloadButton);
+        scrollIntoView(downloadButton);
+        clickJS(downloadButton);
         // small wait for download the file
         try {
             Thread.sleep(2000);
@@ -37,8 +36,8 @@ public class EpamAboutPage extends BaseGeneralPage {
     }
 
     public void clickSubmitButton() {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", submitButton);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", submitButton);
+        scrollIntoView(submitButton);
+        clickJS(submitButton);
     }
 
     public String getFirstNameValidationMessage() {

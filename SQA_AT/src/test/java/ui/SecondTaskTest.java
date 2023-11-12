@@ -14,10 +14,15 @@ import static org.testng.Assert.*;
 
 public class SecondTaskTest extends BaseTest {
 
+    private static final String COMPUTERS = "computers";
+    private static final String APPAREL_SHOES = "apparel-shoes";
+    private static final String BASE_URL = "https://demowebshop.tricentis.com/";
+    private static final String CHECKOUT_URL = "https://demowebshop.tricentis.com/onepagecheckout";
+
     @BeforeMethod
     public void openMainSite() {
         NavigationPO navigation = new NavigationPO();
-        navigation.navigateToUrl("https://demowebshop.tricentis.com/");
+        navigation.navigateToUrl(BASE_URL);
     }
 
     @Test(enabled = false)
@@ -30,7 +35,7 @@ public class SecondTaskTest extends BaseTest {
         String email = "john_smit2@gmail.com";
         String password = "Qwerty123!";
         webShopRegisterPage.registerUser(firstName, lastName, email, password);
-        new NavigationPO().navigateToUrl("https://demowebshop.tricentis.com/");
+        new NavigationPO().navigateToUrl(BASE_URL);
         assertEquals(new WebShopMainPage().getCurrentLoginAccountName(),
                 email, "Incorrect email name");
     }
@@ -61,7 +66,7 @@ public class SecondTaskTest extends BaseTest {
     public void verifyChangingNumberOfItemsOnPage() {
         loginUser();
         WebShopMainPage webShopMainPage = new WebShopMainPage();
-        webShopMainPage.clickOnHeaderMenuItem("computers");
+        webShopMainPage.clickOnHeaderMenuItem(COMPUTERS);
         WebShopItemPage webShopItemPage = webShopMainPage.clickOnItemByIndex(0);
         int numberOfItemsOnPage = webShopItemPage.selectPageSize(4);
         assertEquals(numberOfItemsOnPage, 4);
@@ -73,7 +78,7 @@ public class SecondTaskTest extends BaseTest {
     public void verifySortingItems() {
         loginUser();
         WebShopMainPage webShopMainPage = new WebShopMainPage();
-        webShopMainPage.clickOnHeaderMenuItem("computers");
+        webShopMainPage.clickOnHeaderMenuItem(COMPUTERS);
         WebShopItemPage webShopItemPage = webShopMainPage.clickOnItemByIndex(0);
         int numberOfItemsOnPage = webShopItemPage.selectPageSize(4);
         assertEquals(numberOfItemsOnPage, 4);
@@ -93,7 +98,7 @@ public class SecondTaskTest extends BaseTest {
     public void addItemToWishlist() {
         loginUser();
         WebShopMainPage webShopMainPage = new WebShopMainPage();
-        webShopMainPage.clickOnHeaderMenuItem("apparel-shoes");
+        webShopMainPage.clickOnHeaderMenuItem(APPAREL_SHOES);
         WebShopItemPage webShopItemPage = webShopMainPage.clickOnItemByIndex(0);
         webShopItemPage.clickAddToWishListButton();
         WebShopCartPage webShopCartPage = webShopMainPage.clickWishlistCounter();
@@ -104,7 +109,7 @@ public class SecondTaskTest extends BaseTest {
     public void addToCart() {
         loginUser();
         WebShopMainPage webShopMainPage = new WebShopMainPage();
-        webShopMainPage.clickOnHeaderMenuItem("apparel-shoes");
+        webShopMainPage.clickOnHeaderMenuItem(APPAREL_SHOES);
         WebShopItemPage webShopItemPage = webShopMainPage.clickOnItemByIndex(0);
         webShopItemPage.clickAddToCartButton();
         WebShopCartPage webShopCartPage = webShopMainPage.clickShoppingCartCounter();
@@ -115,7 +120,7 @@ public class SecondTaskTest extends BaseTest {
     public void removeFromCart() {
         loginUser();
         WebShopMainPage webShopMainPage = new WebShopMainPage();
-        webShopMainPage.clickOnHeaderMenuItem("apparel-shoes");
+        webShopMainPage.clickOnHeaderMenuItem(APPAREL_SHOES);
         WebShopItemPage webShopItemPage = webShopMainPage.clickOnItemByIndex(0);
         webShopItemPage.clickAddToCartButton();
         WebShopCartPage webShopCartPage = webShopMainPage.clickShoppingCartCounter();
@@ -127,12 +132,12 @@ public class SecondTaskTest extends BaseTest {
     public void checkCheckoutItem() {
         loginUser();
         WebShopMainPage webShopMainPage = new WebShopMainPage();
-        webShopMainPage.clickOnHeaderMenuItem("apparel-shoes");
+        webShopMainPage.clickOnHeaderMenuItem(APPAREL_SHOES);
         WebShopItemPage webShopItemPage = webShopMainPage.clickOnItemByIndex(0);
         webShopItemPage.clickAddToCartButton();
         WebShopCartPage webShopCartPage = webShopMainPage.clickShoppingCartCounter();
         assertEquals(webShopCartPage.getCartItemNumber(), 1);
-        webShopCartPage.checkCheckoutItem();
+        webShopCartPage.checkCheckoutItem(CHECKOUT_URL);
     }
 
     @AfterMethod
