@@ -9,22 +9,29 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static assertion.MandatoryFieldsAssertion.verifyMandatoryFields;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.*;
 
 public class FirstTaskTest extends BaseTest {
 
+    private static final String EPAM_URL = "https://www.epam.com/" ;
+    private static final String EPAM_ABOUT_URL = "https://www.epam.com/about";
+    private static final String EPAM_ABOUT_CONTACT_URL = "https://www.epam.com/about/who-we-are/contact";
+    private static final String EPAM_CAREER_URL = "https://careers.epam.ua/";
+
     @BeforeMethod
     public void openMainSite() {
         NavigationPO navigation = new NavigationPO();
-        navigation.navigateToUrl("https://epam.com");
+        navigation.navigateToUrl(EPAM_URL);
     }
 
     @Test
     public void checkTitle() {
         EpamHomePage epamHomePage = new EpamHomePage();
-        assertEquals(epamHomePage.getTitle(),
-                "EPAM | Software Engineering & Product Development Services",
-                "Title is incorrect");
+        assertThat(epamHomePage.getTitle())
+                .as("Has title")
+                .isEqualTo("EPAM | Software Engineering & Product Development Services");
     }
 
     @Test
@@ -32,20 +39,20 @@ public class FirstTaskTest extends BaseTest {
         EpamHomePage epamHomePage = new EpamHomePage();
         if (epamHomePage.isDarkThemeMode()) {
             epamHomePage.clickThemeSwitcher();
-            assertFalse(epamHomePage.isDarkThemeMode());
+            assertThat(epamHomePage.isDarkThemeMode()).isFalse();
         } else {
             epamHomePage.clickThemeSwitcher();
-            assertTrue(epamHomePage.isDarkThemeMode());
+            assertThat(epamHomePage.isDarkThemeMode()).isTrue();
         }
     }
 
     @Test
     public void testUALanguageSelection() {
         EpamHomePage epamHomePage = new EpamHomePage();
-        epamHomePage.selectLanguage("uk", "https://careers.epam.ua/");
-        assertEquals(epamHomePage.getTitle(),
-                "EPAM Ukraine - найбільша ІТ-компанія в Україні | Вакансії",
-                "Title is incorrect");
+        epamHomePage.selectLanguage("uk", EPAM_CAREER_URL);
+        assertThat(epamHomePage.getTitle())
+                .as("Has title")
+                .isEqualTo("EPAM Ukraine - найбільша ІТ-компанія в Україні | Вакансії");
     }
 
     @Test
@@ -90,29 +97,26 @@ public class FirstTaskTest extends BaseTest {
     @Test
     public void checkCompanyLogoRedirection() {
         NavigationPO navigation = new NavigationPO();
-        navigation.navigateToUrl("https://www.epam.com/about");
+        navigation.navigateToUrl(EPAM_ABOUT_URL);
         EpamHomePage epamHomePage = new EpamHomePage();
-        epamHomePage.checkLogoRedirection("https://www.epam.com/");
+        epamHomePage.checkLogoRedirection(EPAM_URL);
     }
 
     @Test
     public void checkDownloadReport() {
         NavigationPO navigation = new NavigationPO();
-        navigation.navigateToUrl("https://www.epam.com/about");
+        navigation.navigateToUrl(EPAM_ABOUT_URL);
         EpamAboutPage epamAboutPage = new EpamAboutPage();
         epamAboutPage.clickDownloadButton();
-        assertTrue(FileUtil.isFileDownloaded("EPAM_Corporate_Overview_2023.pdf"));
+        assertTrue(FileUtil.isFileDownloaded("EPAM_Corporate_Overview_Q3_october.pdf"));
     }
 
     @Test
     public void checkMandatoryFields() {
         NavigationPO navigation = new NavigationPO();
-        navigation.navigateToUrl("https://www.epam.com/about/who-we-are/contact");
+        navigation.navigateToUrl(EPAM_ABOUT_CONTACT_URL);
         EpamAboutPage epamAboutPage = new EpamAboutPage();
         epamAboutPage.clickSubmitButton();
-        assertEquals(epamAboutPage.getFirstNameValidationMessage(), "This is a required field");
-        assertEquals(epamAboutPage.getLastNameValidationMessage(), "This is a required field");
-        assertEquals(epamAboutPage.getEmailValidationMessage(), "This is a required field");
-        assertEquals(epamAboutPage.getPhoneValidationMessage(), "This is a required field");
+        verifyMandatoryFields(epamAboutPage);
     }
 }

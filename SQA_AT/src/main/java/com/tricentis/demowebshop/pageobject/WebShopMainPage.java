@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 public class WebShopMainPage extends BaseGeneralPage {
 
+    private static final String HREF_ATTR = "href";
+
     @FindBy (css = ".ico-login")
     private WebElement loginButton;
 
@@ -46,7 +48,7 @@ public class WebShopMainPage extends BaseGeneralPage {
 
     public List<String> getComputersGroupListName() {
         List<String> list = computersGroupList.stream()
-                .map(f -> f.getAttribute("href"))
+                .map(f -> f.getAttribute(HREF_ATTR))
                 .collect(Collectors.toList());
         list = list.stream()
                 .map(g -> g.substring(g.indexOf("com/") + 4))
@@ -55,7 +57,7 @@ public class WebShopMainPage extends BaseGeneralPage {
     }
 
     public void clickOnHeaderMenuItem(String itemName) {
-        driver.findElement(new By.ByCssSelector(".top-menu a[href*='" + itemName + "']")).click();
+        driver.findElement(topMenuItemNameLocator(itemName)).click();
     }
 
     public WebShopItemPage clickOnItemByIndex(int index) {
@@ -81,5 +83,9 @@ public class WebShopMainPage extends BaseGeneralPage {
             throw new RuntimeException(e);
         }
         return new WebShopCartPage();
+    }
+
+    private By.ByCssSelector topMenuItemNameLocator(String itemName) {
+        return new By.ByCssSelector(".top-menu a[href*='" + itemName + "']");
     }
 }
